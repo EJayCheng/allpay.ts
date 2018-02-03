@@ -1,5 +1,5 @@
-# allpay.ts
-  allpay api. typescript version.
+# oPay.ts
+  oPay API. typescript version.
   
 # NPM
   not yet

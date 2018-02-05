@@ -1,14 +1,20 @@
 export interface IOPayConfig {
-  /** 會員編號 */
+  /** 
+   * 會員編號 (由 O’Pay 提供)
+   * - 正式環境 MerchantID 取得 [FAQ](https://forum.opay.tw/forum.php?mod=viewthread&tid=135&extra=page%3D1)
+   */
   MerchantID: string,
   /** ALL IN ONE 介接 HashKey */
   HashKey: string,
   /** ALL IN ONE 介接 HashIV */
   HashIV: string,
-
+  /** [POST]產生 O’Pay 訂單 */
+  AioCheckOutUrl: string;
 }
 export class OPayConfig implements IOPayConfig {
-  public AioCheckOutUrl = "https://payment.opay.tw/Cashier/AioCheckOut/V4";
+  private devEnv: string;
+  public AioCheckOutUrl: string;
+  /** oPay webhook ip 安全白名單 */
   public ipWhitelist: string[] = [
     "60.199.179.34",
     "60.199.179.36",
@@ -17,16 +23,16 @@ export class OPayConfig implements IOPayConfig {
     "60.199.179.53"
   ]
   public constructor(
-    /** 會員編號 */
-    public MerchantID: string,
-    /** ALL IN ONE 介接 HashKey */
-    public HashKey: string,
-    /** ALL IN ONE 介接 HashIV */
-    public HashIV: string
-  ) { }
-}
-
-export class DevOPayConfig implements IOPayConfig {
-
+    /** 會員編號 (由 O’Pay 提供), 預設使用測試環境(2000132) */
+    public MerchantID: string = "2000132",
+    /** ALL IN ONE 介接 HashKey, 預設使用測試環境(5294y06JbISpM5x9) */
+    public HashKey: string = "5294y06JbISpM5x9",
+    /** ALL IN ONE 介接 HashIV, 預設使用測試環境(v77hoKGq4kWxNNIS) */
+    public HashIV: string = "v77hoKGq4kWxNNIS"
+  ) {
+    //判斷是否為測試環境
+    if (['2012441', '2000132'].indexOf(this.MerchantID) != -1) this.devEnv = '-stage';
+    this.AioCheckOutUrl = `https://payment${this.devEnv}.opay.tw/Cashier/AioCheckOut/V4`
+  }
 }
 

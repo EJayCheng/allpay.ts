@@ -1,0 +1,12 @@
+{
+  "name": "oPay.ts",
+  "version": "1.0.0",
+  "description": "oPay API. typescript version.",
+  "main": "index.ts",
+  "repository": "https://github.com/EJayCheng/oPay.ts.git",
+  "author": "EJay <ejay@anyong.com.tw>",
+  "license": "MIT",
+  "dependencies": {
+    "moment": "^2.20.1"
+  }
+}

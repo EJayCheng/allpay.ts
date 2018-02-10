@@ -7,6 +7,12 @@
   "author": "EJay <ejay@anyong.com.tw>",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.20.1"
+    "@types/lodash": "^4.14.102",
+    "@types/node": "^9.4.4",
+    "@types/request-promise": "^4.1.41",
+    "lodash": "^4.17.5",
+    "moment": "^2.20.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   }
 }

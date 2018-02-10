@@ -1,1 +1,0 @@
-export { IOPayConfig, OPayConfig } from "./config";

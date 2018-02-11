@@ -37,6 +37,7 @@ export interface ICheckOutMust {
   ItemName: string;
   /**
    * 付款完成通知回傳網址
+   *
    * 當消費者付款完成後，歐付寶會將付款結果參數以幕後(Server POST)回傳到該網址。
    * - 請勿設定與 Client 端接收付款結果網址 OrderResultURL 相同位置，避免程式判斷錯誤。
    * - 請在收到 Server 端付款結果通知後，請正確回應 1|OK 給歐付寶

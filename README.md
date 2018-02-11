@@ -1,12 +1,15 @@
 # oPay.ts
-  oPay API. typescript version.
-  
-# NPM
-  not yet
+
+oPay API. typescript version.
+
+# npm
+
+not yet
 
 # License
-  MIT License
 
-  Copyright © 2016 Anyong Fintech Co., Ltd.
+MIT License
 
-  https://www.anyong.com.tw
+Copyright © 2016 Anyong Fintech Co., Ltd.
+
+https://www.anyong.com.tw

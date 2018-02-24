@@ -1,0 +1,12 @@
+.vscode/
+.tmp/
+.nyc_output/
+node_modules/
+coverage/
+dist/test/
+test/
+yarn.lock
+package-lock.json
+tsconfig.json
+.gitignore
+.npmignore

@@ -28,12 +28,6 @@ export class Verification {
     method: TVerifyMethod | TVerifyMethod[] | TMultipleVerifyMethod,
     keyName?: string
   ): boolean {
-    // if (typeof method == "string") {
-    //   let func = (Verification as any)[method];
-    //   if (typeof func != "function")
-    //     throw `Error Verification: no provide "${method}" method.`;
-    //   return func(param);
-    // } else
     if (typeof method == "function") {
       try {
         return method(param);

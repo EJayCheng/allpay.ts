@@ -1,10 +1,10 @@
 {
-  "name": "oPay.ts",
-  "version": "1.0.0",
+  "name": "opay.ts",
+  "version": "0.0.1",
   "description": "oPay API. typescript version.",
   "main": "index.ts",
   "repository": "https://github.com/EJayCheng/oPay.ts.git",
-  "author": "EJay <ejay@anyong.com.tw>",
+  "author": "EJay <gto830226@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@types/lodash": "^4.14.102",

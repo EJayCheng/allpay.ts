@@ -4,7 +4,7 @@ oPay API. typescript version.
 
 # npm
 
-not yet
+https://www.npmjs.com/package/opay.ts
 
 # License
 

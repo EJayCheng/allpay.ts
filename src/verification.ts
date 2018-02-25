@@ -156,6 +156,13 @@ export class Verification {
       return res;
     };
   }
+  public static lengthNotEqual(val: number) {
+    return (value: any): boolean => {
+      let res = value.length != val;
+      if (!res) throw `length must not equal: ${val}`;
+      return res;
+    };
+  }
   public static limitLength(min: number, max: number) {
     return (value: any): boolean => {
       let length = `${value}`.length;
@@ -163,6 +170,21 @@ export class Verification {
       if (!res) throw `length must in range: ${min} ~ ${max}.`;
       return res;
     };
+  }
+  public static isHttpUrl(value: any) {
+    let res = /^http\:\/\//i.test(value);
+    if (!res) throw `value must be http url.`;
+    return res;
+  }
+  public static isHttpsUrl(value: any) {
+    let res = /^https\:\/\//i.test(value);
+    if (!res) throw `value must be https url.`;
+    return res;
+  }
+  public static isUrl(value: any) {
+    let res = /^(http|https)\:\/\//i.test(value);
+    if (!res) throw `value must be url.`;
+    return res;
   }
   public static minValue(min: number) {
     return (value: any): boolean => {
@@ -206,13 +228,26 @@ export class Verification {
       return res;
     };
   }
-
-  public static includes(values: any[]) {
+  public static i(val: any) {
     return (value: any): boolean => {
-      for (let val of values) {
-        if (val === value) return true;
-      }
-      throw `value is not includes [${values.join(", ")}]`;
+      let res = value == val;
+      if (!res) throw `value must equal: ${val}.`;
+      return res;
+    };
+  }
+
+  public static includes<T = any>(values: T[]) {
+    return (value: any): boolean => {
+      let res = values.indexOf(value) != -1;
+      if (!res) throw `value must includes [${values.join(", ")}]`;
+      return res;
+    };
+  }
+  public static notIncludes<T = any>(values: T[]) {
+    return (value: any): boolean => {
+      let res = values.indexOf(value) != -1;
+      if (!res) throw `value must not includes [${values.join(", ")}]`;
+      return res;
     };
   }
   public static typeof(

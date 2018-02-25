@@ -1,6 +1,6 @@
 {
   "name": "opay.ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "oPay API. typescript version.",
   "main": "index.ts",
   "repository": "https://github.com/EJayCheng/oPay.ts.git",

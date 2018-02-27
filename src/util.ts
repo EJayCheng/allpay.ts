@@ -1,6 +1,28 @@
 import { IOPayConfig } from "config";
 import * as crypto from "crypto";
-
+export function generateMerchantTradeNo() {
+  return `TN${Date.now()}R${randString(4)}`.slice(0, 20);
+}
+export function randString(
+  length: number,
+  option: {
+    notAllowNumber?: boolean;
+    notAllowEnglish?: boolean;
+    notAllowLowercaseEnglish?: boolean;
+    notAllowUppercaseEnglish?: boolean;
+  } = {}
+) {
+  let possible = "";
+  if (!option.notAllowNumber) possible += "0123456789";
+  if (!option.notAllowEnglish && !option.notAllowUppercaseEnglish)
+    possible += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (!option.notAllowEnglish && !option.notAllowLowercaseEnglish)
+    possible += "abcdefghijklmnopqrstuvwxyz";
+  let text = "";
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
 export function getMacValue(params: any, config: IOPayConfig) {
   if (typeof params != "object") throw "Error getMacValue: params is invalid.";
   let invalidKeys = ["CheckMacValue", "HashKey", "HashIV"];
@@ -13,9 +35,8 @@ export function getMacValue(params: any, config: IOPayConfig) {
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
     .map(key => `${key}=${params[key]}`)
     .join("&");
-
   raw = urlEncodeDotNet(
-    `HashKey=${config.AIOHashKey}${raw}HashIV=${config.AIOHashIV}`
+    `HashKey=${config.AIOHashKey}&${raw}&HashIV=${config.AIOHashIV}`
   );
 
   let res = "";
@@ -51,35 +72,40 @@ export function getPostFormHTML(url: string, params: any) {
   let inputs = Object.keys(params)
     .map(
       key =>
-        `<input type="hidden" name="${key}" id="opay_input_${key}" value="${
+        `  <input type="hidden" name="${key}" id="opay_input_${key}" value="${
           params[key]
         }" />`
     )
     .join("\n");
   let id = `opay_form_${params.MerchantTradeNo}`;
   return `
-  <form id="${id}" action="${url}" method="post">";
-    ${inputs}
-    <script type="text/javascript">document.getElementById("${id}").submit();</script>
-  </form>`;
+<form id="${id}" action="${url}" method="post">";
+${inputs}
+  <script type="text/javascript">document.getElementById("${id}").submit();</script>
+</form>`;
 }
 
-export function verifyMacValue(body: string, config: IOPayConfig) {
-  if (typeof body != "string") throw "Error verifyMacValue: body is invalid.";
+export function parseParameters(text: string) {
+  if (typeof text != "string") throw "Error parseParameters: text is invalid.";
   let params: any = {};
-  body
+  text
     .split("&")
     .map(str => str.split("="))
     .forEach(param => {
       params[param[0]] = param[1];
     });
-  let mac: string = params.CheckMacValue;
-  delete params.CheckMacValue;
+  return params;
+}
+
+export function verifyMacValue(body: any, config: IOPayConfig) {
+  if (typeof body != "object") throw "Error verifyMacValue: body is invalid.";
+  let mac: string = body.CheckMacValue;
+  delete body.CheckMacValue;
   let val = "";
   if (mac.length === 64) {
-    val = getMacValue(params, config);
+    val = getMacValue(body, config);
   } else if (mac.length === 32) {
-    val = getMacValue(params, config);
+    val = getMacValue(body, config);
   }
   return mac === val;
 }

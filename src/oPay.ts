@@ -1,9 +1,14 @@
 import { IOPayConfig, OPayConfig } from "./config";
 import { ICheckOutMust, ICheckOutOption } from "./ICheckOut";
-import * as request from "request-promise";
+import { IReturnPost } from "./IReturnPost";
 import { extend } from "lodash";
 import * as moment from "moment";
-import { getMacValue, getPostFormHTML } from "./util";
+import {
+  getMacValue,
+  getPostFormHTML,
+  verifyMacValue,
+  generateMerchantTradeNo
+} from "./util";
 import { Verification as V } from "./verification";
 export class OPay {
   public constructor(private config: IOPayConfig) {}
@@ -16,12 +21,12 @@ export class OPay {
    * - MerchantID: [config.MerchantID]
    * - MerchantTradeDate: [now]
    * - PaymentType: "aio"
-   *
    * #### response: html string
    */
-  public getCheckOutFormHTML(must: ICheckOutMust, option?: ICheckOutOption) {
+  public checkout(must: ICheckOutMust, option?: ICheckOutOption) {
     let body: any = extend(
       {
+        MerchantTradeNo: generateMerchantTradeNo(),
         EncryptType: 1,
         ChoosePayment: "ALL",
         MerchantID: this.config.MerchantID,
@@ -38,7 +43,11 @@ export class OPay {
       MerchantTradeDate: [V.isMatch(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)],
       TotalAmount: [V.isNumber, V.minValue(1), V.isInteger],
       MerchantID: [V.isString, V.limitLength(1, 10)],
-      MerchantTradeNo: [V.isString, V.limitLength(1, 20)],
+      MerchantTradeNo: [
+        V.isString,
+        V.limitLength(1, 20),
+        V.isNumberOrEnglishLetter
+      ],
       TradeDesc: [V.isString, V.limitLength(1, 200)],
       ItemName: [V.isString, V.limitLength(1, 200)],
       ReturnURL: [V.isString, V.isUrl, V.limitLength(1, 200)],
@@ -56,6 +65,41 @@ export class OPay {
     });
     if (check.invalid) throw check.errorMessage;
     body.CheckMacValue = getMacValue(body, this.config);
-    return getPostFormHTML(this.config.AioCheckOutUrl, body);
+    return {
+      params: body,
+      html: getPostFormHTML(this.config.AioCheckOutUrl, body)
+    };
   }
+
+  /**
+   * #### 當消費者付款完成後，express server 接收 oPay 的付款結果的 webhook
+   *
+   */
+  public returnPostHandler(
+    /** CheckMacValue驗證成功後的對應處理 */
+    successEvent: (params: IReturnPost) => boolean,
+    /** 錯誤處理 */
+    errorEvent?: (err: string) => void
+  ) {
+    if (typeof successEvent != "function")
+      throw "Error returnPostHandler: successEvent must be function.";
+    return (req, res, next) => {
+      try {
+        let isLegal = verifyMacValue(req.body, this.config);
+        if (!isLegal) throw "CheckMacValue驗證錯誤";
+        if (typeof successEvent == "function" && successEvent(req.body)) {
+          res.send("1|OK");
+          return;
+        }
+        throw "付款通知處理失敗";
+      } catch (err) {
+        if (typeof errorEvent == "function") errorEvent(err);
+        res.send(`0|${err}`);
+      }
+    };
+  }
+  /**
+   * 提供會員系統查詢 O'Pay 訂單資訊，可透過此 API 來過濾是否為有效訂單，更多應用請參考[FAQ](https://forum.allpay.com.tw/forum.php?mod=viewthread&tid=95&extra=page%3D1)
+   */
+  public queryOrder() {}
 }

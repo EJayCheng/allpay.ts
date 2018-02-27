@@ -1,3 +1,4 @@
-export { IOPayConfig, OPayConfig } from "./config";
-export { OPay } from "./oPay";
-export { TChoosePayment, ICheckOutOption, ICheckOutMust } from "./ICheckOut";
+export * from "./config";
+export * from "./oPay";
+export * from "./ICheckOut";
+export * from "./util";

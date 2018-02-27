@@ -85,6 +85,11 @@ export class Verification {
     if (!res) throw "value must be number.";
     return res;
   }
+  public static isNumberOrEnglishLetter(value: any): boolean {
+    let res = /^[a-zA-Z0-9]*$/.test(value);
+    if (!res) throw "value must be number or english letter.";
+    return res;
+  }
   public static notNumber(value: any): boolean {
     let res = typeof value != "number";
     if (!res) throw "value must not be number.";

@@ -16,7 +16,8 @@ export interface IOPayConfig {
   AioCheckOutUrl: string;
 }
 export class OPayConfig implements IOPayConfig {
-  private devEnv: string;
+  private devEnv: string = "";
+  public QueryTradeInfoUrl: string;
   public AioCheckOutUrl: string;
   /** oPay webhook ip 安全白名單 */
   public ipWhitelist: string[] = [
@@ -40,5 +41,8 @@ export class OPayConfig implements IOPayConfig {
     this.AioCheckOutUrl = `https://payment${
       this.devEnv
     }.opay.tw/Cashier/AioCheckOut/V4`;
+    this.QueryTradeInfoUrl = `https://payment${
+      this.devEnv
+    }.opay.tw/Cashier/QueryTradeInfo/V4`;
   }
 }

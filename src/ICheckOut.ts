@@ -18,7 +18,7 @@ export interface ICheckOutMust {
    * 3. 如何避免訂單編號重複請參考 [FAQ](https://forum.opay.tw/forum.php?mod=viewthread&tid=127&extra=page%3D1)
    * 4. 如有使用 PlatformID，平台商底下所有商家之訂單編號亦不可重複。
    */
-  MerchantTradeNo: string;
+  MerchantTradeNo?: string;
   /** 會員交易時間, 格式為: yyyy/MM/dd HH:mm:ss */
   MerchantTradeDate?: string;
   /** 交易類型, 請固定填入 aio */
@@ -61,7 +61,7 @@ export interface ICheckOutMust {
 }
 
 export interface ICheckOutOption {
-  /** 會員商店代碼， */
+  /** 會員商店代碼 */
   StoreID?: string;
   /**
    * Client 端返回會員系統的按鈕連結

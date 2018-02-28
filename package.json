@@ -1,5 +1,5 @@
 {
-  "name": "opay.ts",
+  "name": "opay-ts",
   "version": "0.0.8",
   "description": "oPay API. typescript version.",
   "main": "index.ts",

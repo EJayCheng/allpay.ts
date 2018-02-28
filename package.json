@@ -1,6 +1,6 @@
 {
   "name": "opay.ts",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "oPay API. typescript version.",
   "main": "index.ts",
   "scripts": {
@@ -11,11 +11,9 @@
   "author": "EJay <gto830226@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/body-parser": "^1.16.8",
     "@types/lodash": "^4.14.102",
     "@types/node": "^9.4.4",
     "@types/request-promise": "^4.1.41",
-    "body-parser": "^1.18.2",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "request": "^2.83.0",
@@ -23,6 +21,8 @@
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "@types/body-parser": "^1.16.8",
+    "body-parser": "^1.18.2"
   }
 }

@@ -7,7 +7,7 @@
     "test": "ts-node test.ts",
     "prepublish": "tsc"
   },
-  "repository": "https://github.com/EJayCheng/oPay.ts.git",
+  "repository": "https://github.com/EJayCheng/oPay-ts.git",
   "author": "EJay <gto830226@gmail.com>",
   "license": "MIT",
   "dependencies": {

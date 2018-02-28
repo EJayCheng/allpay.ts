@@ -1,4 +1,4 @@
-export * from "./config";
+export { OPayConfig, IOPayConfig } from "./config";
 export * from "./oPay";
 export * from "./ICheckOut";
 export * from "./util";

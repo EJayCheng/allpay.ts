@@ -1,6 +1,6 @@
-export { OPayConfig, IOPayConfig } from "./config";
+export * from "./config";
 export * from "./oPay";
-export * from "./ICheckOut";
 export * from "./util";
+export * from "./ICheckOut";
 export * from "./IReturnPost";
 export * from "./ITradeInfo";

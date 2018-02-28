@@ -14,6 +14,8 @@ export interface IOPayConfig {
   InvoiceHashIV?: string;
   /** [POST]產生 O’Pay 訂單 */
   AioCheckOutUrl: string;
+  /** [POST]查詢 O’Pay 訂單 */
+  QueryTradeInfoUrl: string;
 }
 export class OPayConfig implements IOPayConfig {
   private devEnv: string = "";

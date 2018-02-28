@@ -1,8 +1,11 @@
 import { IOPayConfig, OPayConfig } from "./config";
 import { ICheckOutMust, ICheckOutOption } from "./ICheckOut";
 import { IReturnPost } from "./IReturnPost";
+import { ITradeInfo } from "./ITradeInfo";
 import { extend } from "lodash";
 import * as moment from "moment";
+import * as request from "request-promise";
+import * as qs from "querystring";
 import {
   getMacValue,
   getPostFormHTML,
@@ -99,7 +102,39 @@ export class OPay {
     };
   }
   /**
-   * 提供會員系統查詢 O'Pay 訂單資訊，可透過此 API 來過濾是否為有效訂單，更多應用請參考[FAQ](https://forum.allpay.com.tw/forum.php?mod=viewthread&tid=95&extra=page%3D1)
+   * 提供會員系統查詢 O'Pay 訂單資訊，可透過此 API 來過濾是否為有效訂單，更多應用請參考 [FAQ](https://forum.allpay.com.tw/forum.php?mod=viewthread&tid=95&extra=page%3D1)
    */
-  public queryOrder() {}
+  public async queryTradeInfo(info: ITradeInfo) {
+    let body = extend<ITradeInfo>(
+      {
+        TimeStamp: Math.floor(Date.now() / 1000),
+        MerchantID: this.config.MerchantID,
+        PlatformID: ""
+      },
+      info
+    );
+    let check = new V();
+    check.verify(body, {
+      TimeStamp: [V.isNumber],
+      MerchantID: [V.isString, V.limitLength(1, 10)],
+      MerchantTradeNo: [
+        V.isString,
+        V.limitLength(1, 20),
+        V.isNumberOrEnglishLetter
+      ]
+    });
+    if (check.invalid) throw check.errorMessage;
+    body.CheckMacValue = getMacValue(body, this.config);
+    let data = qs.stringify(body);
+    return request
+      .post(this.config.QueryTradeInfoUrl, {
+        form: body,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(data)
+        },
+        json: false
+      })
+      .then(qs.parse);
+  }
 }

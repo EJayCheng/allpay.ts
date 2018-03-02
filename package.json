@@ -6,8 +6,30 @@
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "ts-node test.ts",
-    "prepublish": "tsc"
+    "test": "tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/**/*.spec.js ./dist/*.spec.js",
+    "prepublish": "tsc",
+    "coverage": "tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
+  },
+  "nyc": {
+    "include": [
+      "dist/*.js",
+      "dist/**/*.js"
+    ],
+    "exclude": [
+      "**/*.spec.js",
+      "build"
+    ],
+    "extension": [
+      ".js"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "all": true
   },
   "repository": "https://github.com/EJayCheng/oPay-ts.git",
   "author": "EJay <gto830226@gmail.com>",
@@ -22,9 +44,14 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "@types/express": "^4.11.1",
-    "express": "^4.16.2",
     "@types/body-parser": "^1.16.8",
-    "body-parser": "^1.18.2"
+    "@types/express": "^4.11.1",
+    "@types/mocha": "^2.2.48",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mocha": "^5.0.1",
+    "nyc": "^11.4.1",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
   }
 }

@@ -7,13 +7,14 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test":
-      "tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/**/*.spec.js",
+      "rm -rf dist && tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
     "prepublish": "tsc",
-    "coverage": "tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
+    "coverage":
+      "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
   },
   "nyc": {
-    "include": ["dist/*.js", "dist/**/*.js"],
-    "exclude": ["**/*.spec.js", "build"],
+    "include": ["dist/**/*.js"],
+    "exclude": ["**/*.spec.js"],
     "extension": [".js"],
     "require": ["ts-node/register"],
     "reporter": ["text-summary", "html"],

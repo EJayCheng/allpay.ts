@@ -139,6 +139,7 @@ export interface ICheckOutOption {
    * - 建議在測試階段時先不要設定此參數，可將畫面停留在 oPay ，看見 oPay 所提供的錯誤訊息，便可以有效除錯
    * - 若有設定此參數，請務必根據回傳的交易狀態來判斷顯示付款成功與否的頁面
    * - 若導回網址未使用 https 時，部份瀏覽器可能會出現警告訊息
+   * - 僅接受 http 80 port 與 https 443 port
    * - 最大字數 200
    */
   OrderResultURL?: string;
@@ -316,7 +317,35 @@ export interface ICheckOutOption {
    * - 至少要大於等於 1 次以上
    * - 當 PeriodType 設為 D 時，最多可設 365 次
    * - 當 PeriodType 設為 M 時，最多可設 12 次
-   * -當 PeriodType 設為 Y 時，最多可設 1 次
+   * - 當 PeriodType 設為 Y 時，最多可設 1 次
    */
   Frequency?: number;
+  /**
+   * 定期定額總共執行次數
+   * - 至少要大於 1 次以上
+   * - 當 PeriodType 設為 D 時，最多可設 999 次
+   * - 當 PeriodType 設為 M 時，最多可設 99 次
+   * - 當 PeriodType 設為 Y 時，最多可設 9 次
+   *
+   *
+   * 1. 當信用卡定期定額扣款為每個月扣 1 次 500 元，總共要扣 12 次：
+   *  - TotalAmount = 500
+   *  - PeriodAmount = 500
+   *  - PeriodType = M
+   *  - requency = 1
+   *  - ExecTimes = 12
+   * 2. 當信用卡定期定額扣款為 6000 元，每 6 個月扣 1 次，總共要扣 2 次：
+   *  - TotalAmount = 6000
+   *  - PeriodType = M
+   *  - Frequency = 6
+   *  - ExecTimes = 2
+   */
+  ExecTimes?: number;
+  /**
+   * 定期定額的執行結果回應 URL
+   * - 若交易是信用卡定期定額的方式，則每次執行授權完，會將授權結果回傳到這個設定的 URL
+   * - 僅接受 http 80 port 與 https 443 port
+   * - 最大字數 200
+   */
+  PeriodReturnURL?: string;
 }

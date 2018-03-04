@@ -32,6 +32,7 @@ export type TPaymentType =
   /** 儲值/餘額消費_歐付寶 */
   | "TopUpUsed_AllPay";
 
+/** 單次付款成功通知 */
 export interface IReturnPost {
   /**
    * 會員編號 (由 O’Pay 提供)
@@ -79,6 +80,54 @@ export interface IReturnPost {
   PaymentTypeChargeFee: number;
   /** 訂單成立時間，格式為 yyyy/MM/dd HH:mm:ss */
   TradeDate: string;
+  /**
+   * 是否為模擬付款
+   * - 若為 1 時，代表此交易為模擬付款，請勿出貨。
+   * - 若為 0 時，代表此交易非模擬付款。
+   *
+   * 注意事項: 會員可透過廠商後台網站來針對單筆訂單模擬歐付寶回傳付款通知，以方便介接 API 的測試。
+   */
+  SimulatePaid: number;
+  /** 檢查碼 */
+  CheckMacValue: string;
+}
+
+/** 定期定額付款通知 */
+export interface PeriodReturnPost {
+  /**
+   * 會員編號 (由 O’Pay 提供)
+   */
+  MerchantID: string;
+  /**
+   * 會員交易編號(由會員提供)
+   * 1. 會員交易編號均為唯一值，不可重複使用。
+   * 2. 英數字大小寫混合
+   * 3. 如何避免訂單編號重複請參考 [FAQ](https://forum.opay.tw/forum.php?mod=viewthread&tid=127&extra=page%3D1)
+   * 4. 如有使用 PlatformID，平台商底下所有商家之訂單編號亦不可重複。
+   */
+  MerchantTradeNo: string;
+  /** 會員商店代碼 */
+  StoreID: string;
+  /** 交易狀態，若回傳值為 1 時，為付款成功; 其餘代碼皆為交易失敗，請勿出貨。 */
+  RtnCode: number;
+  /** 交易訊息，ex: 交易成功 */
+  RtnMsg: string;
+  /** 訂單建立時所設定的週期種類 */
+  PeriodType: "D" | "M" | "Y";
+  /** 訂單建立時所設定的執行頻率 */
+  Frequency: number;
+  /** 訂單建立時所設定的執行次數 */
+  ExecTimes: number;
+  /** 本次授權(扣款)金額 */
+  Amount: number;
+  /** 此次所授權的交易單號 */
+  Gwsr: number;
+  /** 處理時間，格式：YYYY/MM/dd HH:mm:ss */
+  ProcessDate: string;
+  /** 授權碼 */
+  AuthCode: string;
+  /** 初次授權金額 */
+  FirstAuthAmount: number;
   /**
    * 是否為模擬付款
    * - 若為 1 時，代表此交易為模擬付款，請勿出貨。

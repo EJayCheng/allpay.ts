@@ -93,7 +93,7 @@ export interface IReturnPost {
 }
 
 /** 定期定額付款通知 */
-export interface PeriodReturnPost {
+export interface IPeriodReturnPost {
   /**
    * 會員編號 (由 O’Pay 提供)
    */

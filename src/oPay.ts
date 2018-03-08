@@ -1,6 +1,6 @@
 import { IOPayConfig, OPayConfig } from "./config";
 import { ICheckOutMust, ICheckOutOption } from "./ICheckOut";
-import { IReturnPost } from "./IReturnPost";
+import { IReturnPost, IPeriodReturnPost } from "./IReturnPost";
 import { ITradeInfo } from "./ITradeInfo";
 import { extend } from "lodash";
 import * as moment from "moment";
@@ -76,7 +76,6 @@ export class OPay {
 
   /**
    * #### 當消費者付款完成後，express server 接收 oPay 的付款結果的 webhook
-   *
    */
   public returnPostHandler(
     /** CheckMacValue驗證成功後的對應處理 */
@@ -95,6 +94,32 @@ export class OPay {
           return;
         }
         throw "付款通知處理失敗";
+      } catch (err) {
+        if (typeof errorEvent == "function") errorEvent(err);
+        res.send(`0|${err}`);
+      }
+    };
+  }
+  /**
+   * #### 當消費者定期定額付款完成後，express server 接收 oPay 的定期付款結果的 webhook
+   */
+  public periodReturnPostHandler(
+    /** CheckMacValue驗證成功後的對應處理 */
+    successEvent: (params: IPeriodReturnPost) => boolean,
+    /** 錯誤處理 */
+    errorEvent?: (err: string) => void
+  ) {
+    if (typeof successEvent != "function")
+      throw "Error periodReturnPostHandler: successEvent must be function.";
+    return (req, res, next) => {
+      try {
+        let isLegal = verifyMacValue(req.body, this.config);
+        if (!isLegal) throw "CheckMacValue驗證錯誤";
+        if (typeof successEvent == "function" && successEvent(req.body)) {
+          res.send("1|OK");
+          return;
+        }
+        throw "定期定額付款通知處理失敗";
       } catch (err) {
         if (typeof errorEvent == "function") errorEvent(err);
         res.send(`0|${err}`);

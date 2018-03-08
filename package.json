@@ -6,18 +6,28 @@
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test":
-      "rm -rf dist && tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
-    "prepublish": "tsc",
-    "coverage":
-      "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
+    "start": "ts-node ./test.ts",
+    "test": "rm -rf dist && tsc && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
+    "prepublish": "rm -rf dist && tsc",
+    "coverage": "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
   },
   "nyc": {
-    "include": ["dist/**/*.js"],
-    "exclude": ["**/*.spec.js"],
-    "extension": [".js"],
-    "require": ["ts-node/register"],
-    "reporter": ["text-summary", "html"],
+    "include": [
+      "dist/**/*.js"
+    ],
+    "exclude": [
+      "**/*.spec.js"
+    ],
+    "extension": [
+      ".js"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
     "all": true
   },
   "repository": "https://github.com/EJayCheng/oPay-ts.git",

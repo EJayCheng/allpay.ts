@@ -38,7 +38,7 @@ export class OPayConfig implements IOPayConfig {
     public AIOHashIV: string = "v77hoKGq4kWxNNIS"
   ) {
     //判斷是否為測試環境
-    if (["2012441", "2000132"].indexOf(this.MerchantID) != -1)
+    if (["2012441", "2000132"].includes(this.MerchantID))
       this.devEnv = "-stage";
     this.AioCheckOutUrl = `https://payment${
       this.devEnv

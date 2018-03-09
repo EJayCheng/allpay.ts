@@ -1,10 +1,16 @@
-import { OPayConfig, OPay, generateMerchantTradeNo } from "./";
+import { OPayConfig, OPay, generateMerchantTradeNo } from "./src";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 let app = express();
 let config = new OPayConfig();
 let oPay = new OPay(config);
-app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
+
 app.get("/create_order", (req, res) => {
   let p = oPay.checkout(
     {
@@ -17,8 +23,7 @@ app.get("/create_order", (req, res) => {
       Remark: "by oPay.ts"
     }
   );
-  console.log(p);
-  res.send(p.html);
+  res.contentType("html").send(p.html);
 });
 
 app.post(
@@ -34,7 +39,7 @@ app.post(
   )
 );
 
-app.listen(80, () => console.log("\nhttp://ay.gosu.bar/create_order\n"));
+app.listen(80, () => console.log("\nhttps://ay.gosu.bar/create_order\n"));
 
 // oPay
 //   .queryTradeInfo({ MerchantTradeNo: "TN1519805161935RFW4S" })

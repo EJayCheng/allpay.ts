@@ -13,6 +13,7 @@ import {
   generateMerchantTradeNo
 } from "./util";
 import { Verification as V } from "./verification";
+import { IPaymentInfo } from "IPaymentInfo";
 export class OPay {
   public constructor(private config: IOPayConfig) {}
 
@@ -79,7 +80,7 @@ export class OPay {
    *
    */
   public returnPostHandler(
-    /** CheckMacValue驗證成功後的對應處理 */
+    /** CheckMacValue 驗證成功後的對應處理 */
     successEvent: (params: IReturnPost) => boolean,
     /** 錯誤處理 */
     errorEvent?: (err: string) => void
@@ -89,7 +90,7 @@ export class OPay {
     return (req, res, next) => {
       try {
         let isLegal = verifyMacValue(req.body, this.config);
-        if (!isLegal) throw "CheckMacValue驗證錯誤";
+        if (!isLegal) throw "CheckMacValue 驗證錯誤";
         if (typeof successEvent == "function" && successEvent(req.body)) {
           res.send("1|OK");
           return;
@@ -136,5 +137,29 @@ export class OPay {
         json: false
       })
       .then(qs.parse);
+  }
+
+  public paymentInfoPostHandler(
+    /** CheckMacValue 驗證成功後的對應處理 */
+    successEvent: (params: IPaymentInfo) => boolean,
+    /** 錯誤處理 */
+    errorEvent?: (err: string) => void
+  ) {
+    if (typeof successEvent != "function")
+      throw "Error paymentInfoPostHandler: successEvent must be function.";
+    return (req, res, next) => {
+      try {
+        let isLegal = verifyMacValue(req.body, this.config);
+        if (!isLegal) throw "CheckMacValue 驗證錯誤";
+        if (typeof successEvent == "function" && successEvent(req.body)) {
+          res.send("1|OK");
+          return;
+        }
+        throw "繳費方法成立處理失敗";
+      } catch (err) {
+        if (typeof errorEvent == "function") errorEvent(err);
+        res.send(`0|${err}`);
+      }
+    };
   }
 }

@@ -81,24 +81,27 @@ export class OPay {
    */
   public returnPostHandler(
     /** CheckMacValue 驗證成功後的對應處理 */
-    successEvent: (params: IReturnPost) => boolean,
+    successEvent: (params: IReturnPost) => boolean | Promise<boolean>,
     /** 錯誤處理 */
-    errorEvent?: (err: string) => void
+    errorEvent?: (err: string) => void | Promise<void>
   ) {
     if (typeof successEvent != "function")
       throw "Error returnPostHandler: successEvent must be function.";
-    return (req, res, next) => {
+    return async (req, res, next) => {
       try {
         let isLegal = verifyMacValue(req.body, this.config);
         if (!isLegal) throw "CheckMacValue 驗證錯誤";
-        if (typeof successEvent == "function" && successEvent(req.body)) {
+        if (
+          typeof successEvent == "function" &&
+          (await successEvent(req.body))
+        ) {
           res.send("1|OK");
           return;
         }
         throw "付款通知處理失敗";
       } catch (err) {
-        if (typeof errorEvent == "function") errorEvent(err);
         res.send(`0|${err}`);
+        if (typeof errorEvent == "function") errorEvent(err);
       }
     };
   }
@@ -141,24 +144,27 @@ export class OPay {
 
   public paymentInfoPostHandler(
     /** CheckMacValue 驗證成功後的對應處理 */
-    successEvent: (params: IPaymentInfo) => boolean,
+    successEvent: (params: IPaymentInfo) => boolean | Promise<boolean>,
     /** 錯誤處理 */
-    errorEvent?: (err: string) => void
+    errorEvent?: (err: string) => void | Promise<void>
   ) {
     if (typeof successEvent != "function")
       throw "Error paymentInfoPostHandler: successEvent must be function.";
-    return (req, res, next) => {
+    return async (req, res, next) => {
       try {
         let isLegal = verifyMacValue(req.body, this.config);
         if (!isLegal) throw "CheckMacValue 驗證錯誤";
-        if (typeof successEvent == "function" && successEvent(req.body)) {
+        if (
+          typeof successEvent == "function" &&
+          (await successEvent(req.body))
+        ) {
           res.send("1|OK");
           return;
         }
-        throw "繳費方法成立處理失敗";
+        throw "付款方法通知處理失敗";
       } catch (err) {
-        if (typeof errorEvent == "function") errorEvent(err);
         res.send(`0|${err}`);
+        if (typeof errorEvent == "function") errorEvent(err);
       }
     };
   }

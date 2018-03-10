@@ -31,7 +31,7 @@ app.get("/create_order", (req, res) => {
 app.post(
   "/payment_info_post",
   oPay.paymentInfoPostHandler(
-    params => {
+    async params => {
       console.log("payment_info_post:", params);
       return true;
     },

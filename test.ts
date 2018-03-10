@@ -32,7 +32,7 @@ app.post(
   "/payment_info_post",
   oPay.paymentInfoPostHandler(
     params => {
-      console.log("return_post:", params);
+      console.log("payment_info_post:", params);
       return true;
     },
     err => {
@@ -54,7 +54,7 @@ app.post(
   )
 );
 
-app.listen(80, () => console.log(`\n${dns}return_post\n`));
+app.listen(80, () => console.log(`\n${dns}create_order\n`));
 
 // oPay
 //   .queryTradeInfo({ MerchantTradeNo: "TN1519805161935RFW4S" })

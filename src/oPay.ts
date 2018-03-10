@@ -28,7 +28,7 @@ export class OPay {
    * #### response: html string
    */
   public checkout(must: ICheckOutMust, option?: ICheckOutOption) {
-    let body: any = extend(
+    let body: ICheckOutMust & ICheckOutOption = extend(
       {
         MerchantTradeNo: generateMerchantTradeNo(),
         EncryptType: 1,

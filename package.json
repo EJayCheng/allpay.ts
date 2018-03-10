@@ -1,6 +1,6 @@
 {
   "name": "opay-ts",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "oPay API. typescript version.",
   "main": "dist/index.js",
   "module": "dist/index.js",

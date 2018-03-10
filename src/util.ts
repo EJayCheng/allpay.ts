@@ -88,6 +88,7 @@ ${inputs}
 export function verifyMacValue(body: any, config: IOPayConfig) {
   if (typeof body != "object") throw "Error verifyMacValue: body is invalid.";
   let mac: string = body.CheckMacValue;
+  if (!mac) throw "Error verifyMacValue: CheckMacValue is empty.";
   delete body.CheckMacValue;
   let val = "";
   if (mac.length === 64) {

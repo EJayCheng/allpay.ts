@@ -49,13 +49,13 @@ export interface IReturnPost {
   /** 會員商店代碼 */
   StoreID: string;
   /** 交易狀態，若回傳值為 1 時，為付款成功; 其餘代碼皆為交易失敗，請勿出貨。 */
-  RtnCode: number;
+  RtnCode: string;
   /** 交易訊息，ex: 交易成功 */
   RtnMsg: string;
   /** O’Pay 的交易編號，請保存 O’Pay 的交易編號與會員交易編號[MerchantTradeNo]的關連。 */
   TradeNo: string;
   /** 交易總金額 = 實際付款金額[PayAmt] + 折抵金額[RedeemAmt] */
-  TradeAmt: number;
+  TradeAmt: string;
   /**
    * 實際付款金額 = 交易金額[TradeAmt] - 折抵金額[RedeemAmt]
    *
@@ -63,7 +63,7 @@ export interface IReturnPost {
    * 1. 若為模擬付款時不會回傳此欄位
    * 2. 若建立訂單 UseRedeem = Y 時，才會回傳此欄位
    */
-  PayAmt: number;
+  PayAmt: string;
   /**
    * 使用購物金折抵的金額
    *
@@ -71,13 +71,13 @@ export interface IReturnPost {
    * 1. 若為模擬付款時不會回傳此欄位
    * 2. 若建立訂單 UseRedeem = Y 時，才會回傳此欄位
    */
-  RedeemAmt: number;
+  RedeemAmt: string;
   /** 付款時間，格式為 yyyy/MM/dd HH:mm:ss */
   PaymentDate: string;
   /** 會員選擇的付款方式 */
   PaymentType: TPaymentType;
   /** 通路費(手續費) */
-  PaymentTypeChargeFee: number;
+  PaymentTypeChargeFee: string;
   /** 訂單成立時間，格式為 yyyy/MM/dd HH:mm:ss */
   TradeDate: string;
   /**
@@ -87,7 +87,7 @@ export interface IReturnPost {
    *
    * 注意事項: 會員可透過廠商後台網站來針對單筆訂單模擬歐付寶回傳付款通知，以方便介接 API 的測試。
    */
-  SimulatePaid: number;
+  SimulatePaid: string;
   /** 檢查碼 */
   CheckMacValue: string;
 }
@@ -109,25 +109,25 @@ export interface PeriodReturnPost {
   /** 會員商店代碼 */
   StoreID: string;
   /** 交易狀態，若回傳值為 1 時，為付款成功; 其餘代碼皆為交易失敗，請勿出貨。 */
-  RtnCode: number;
+  RtnCode: string;
   /** 交易訊息，ex: 交易成功 */
   RtnMsg: string;
   /** 訂單建立時所設定的週期種類 */
   PeriodType: "D" | "M" | "Y";
   /** 訂單建立時所設定的執行頻率 */
-  Frequency: number;
+  Frequency: string;
   /** 訂單建立時所設定的執行次數 */
-  ExecTimes: number;
+  ExecTimes: string;
   /** 本次授權(扣款)金額 */
-  Amount: number;
+  Amount: string;
   /** 此次所授權的交易單號 */
-  Gwsr: number;
+  Gwsr: string;
   /** 處理時間，格式：YYYY/MM/dd HH:mm:ss */
   ProcessDate: string;
   /** 授權碼 */
   AuthCode: string;
   /** 初次授權金額 */
-  FirstAuthAmount: number;
+  FirstAuthAmount: string;
   /**
    * 是否為模擬付款
    * - 若為 1 時，代表此交易為模擬付款，請勿出貨。
@@ -135,7 +135,7 @@ export interface PeriodReturnPost {
    *
    * 注意事項: 會員可透過廠商後台網站來針對單筆訂單模擬歐付寶回傳付款通知，以方便介接 API 的測試。
    */
-  SimulatePaid: number;
+  SimulatePaid: string;
   /** 檢查碼 */
   CheckMacValue: string;
 }

@@ -16,13 +16,13 @@ export interface IPaymentInfo {
   /** 會員商店代碼 */
   StoreID: string;
   /** 交易狀態，若回傳值為 1 時，為付款成功; 其餘代碼皆為交易失敗，請勿出貨。 */
-  RtnCode: number;
+  RtnCode: string;
   /** 交易訊息，ex: 交易成功 */
   RtnMsg: string;
   /** O’Pay 的交易編號，請保存 O’Pay 的交易編號與會員交易編號[MerchantTradeNo]的關連。 */
   TradeNo: string;
   /** 交易總金額 = 實際付款金額[PayAmt] + 折抵金額[RedeemAmt] */
-  TradeAmt: number;
+  TradeAmt: string;
   /**
    * 實際付款金額 = 交易金額[TradeAmt] - 折抵金額[RedeemAmt]
    *
@@ -30,7 +30,7 @@ export interface IPaymentInfo {
    * 1. 若為模擬付款時不會回傳此欄位
    * 2. 若建立訂單 UseRedeem = Y 時，才會回傳此欄位
    */
-  PayAmt: number;
+  PayAmt: string;
   /**
    * 使用購物金折抵的金額
    *
@@ -38,7 +38,7 @@ export interface IPaymentInfo {
    * 1. 若為模擬付款時不會回傳此欄位
    * 2. 若建立訂單 UseRedeem = Y 時，才會回傳此欄位
    */
-  RedeemAmt: number;
+  RedeemAmt: string;
   /** 付款時間，格式為 yyyy/MM/dd HH:mm:ss */
   PaymentDate: string;
   /** 會員選擇的付款方式 */

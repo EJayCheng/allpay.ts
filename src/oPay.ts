@@ -13,7 +13,7 @@ import {
   generateMerchantTradeNo
 } from "./util";
 import { Verification as V } from "./verification";
-import { IPaymentInfo } from "IPaymentInfo";
+import { IPaymentInfo } from "./IPaymentInfo";
 export class OPay {
   public constructor(private config: IOPayConfig) {}
 

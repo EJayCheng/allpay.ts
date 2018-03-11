@@ -53,6 +53,9 @@ app.post(
     }
   )
 );
+app.get("/", (req, res, next) => {
+  res.send(`${Date.now()}`);
+});
 
 app.listen(80, () => console.log(`\n${dns}create_order\n`));
 

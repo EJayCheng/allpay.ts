@@ -72,13 +72,13 @@ export interface IReturnPost {
    * 2. 若建立訂單 UseRedeem = Y 時，才會回傳此欄位
    */
   RedeemAmt: string;
-  /** 付款時間，格式為 yyyy/MM/dd HH:mm:ss */
+  /** 付款時間，格式為 YYYY/MM/dd HH:mm:ss */
   PaymentDate: string;
   /** 會員選擇的付款方式 */
   PaymentType: TPaymentType;
   /** 通路費(手續費) */
   PaymentTypeChargeFee: string;
-  /** 訂單成立時間，格式為 yyyy/MM/dd HH:mm:ss */
+  /** 訂單成立時間，格式為 YYYY/MM/dd HH:mm:ss */
   TradeDate: string;
   /**
    * 是否為模擬付款

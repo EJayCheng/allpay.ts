@@ -245,7 +245,6 @@ export class Verification {
       return res;
     };
   }
-
   public static includes<T = any>(values: T[]) {
     return (value: any): boolean => {
       let res = values.indexOf(value) != -1;
@@ -268,5 +267,53 @@ export class Verification {
       if (!res) throw `value type must be: ${type}.`;
       return res;
     };
+  }
+  public static isOrder(order: any) {
+    const V = Verification;
+    const check = new V();
+    check.verify(order, {
+      EncryptType: [V.required, V.equal(1)],
+      PaymentType: [V.required, V.equal("aio")],
+      MerchantTradeDate: [V.required, V.isMatch(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)],
+      TotalAmount: [V.required, V.isNumber, V.minValue(1), V.isInteger],
+      MerchantID: [V.required, V.isString, V.maxLength(10)],
+      MerchantTradeNo: [
+        V.required, 
+        V.isString,
+        V.maxLength(20),
+        V.isNumberOrEnglishLetter
+      ],
+      TradeDesc: [V.required, V.isString, V.maxLength(200)],
+      ItemName: [V.required, V.isString, V.maxLength(200)],
+      ReturnURL: [V.required, V.isString, V.isUrl, V.maxLength(200)],
+      ChoosePayment: [
+        V.required,
+        V.includes<string>([
+          "Credit",
+          "WebATM",
+          "ATM",
+          "CVS",
+          "AccountLink",
+          "TopUpUsed",
+          "ALL"
+        ])
+      ]
+    });
+    if (!check.valid) throw check.errorMessage;
+    return check.valid;
+  }
+  public static isPeriodOrder(order: any) {
+    const V = Verification;
+    const check = new V();
+    check.verify(order, {
+      StoreID: [V.isString, V.maxLength(20)],
+      PeriodAmount: [V.required, V.isNumber],
+      PeriodType: [V.required, V.isString],
+      Frequency: [V.required, V.isNumber],
+      ExecTimes: [V.required, V.isNumber],
+      PeriodReturnURL: [V.isString]
+    });
+    if (!check.valid) throw check.errorMessage;
+    return check.valid;
   }
 }

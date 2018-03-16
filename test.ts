@@ -22,7 +22,7 @@ app.get("/create_order", (req, res) => {
 });
 
 app.get("/create_period_order", (req, res) => {
-  let p = oPay.checkout(
+  let p = oPay.periodCheckout(
     {
       TotalAmount: 88,
       ItemName: "商品名稱",

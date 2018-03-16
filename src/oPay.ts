@@ -40,34 +40,30 @@ export class OPay {
       must
     );
     let check = new V();
-    check.verify(body, {
-      EncryptType: [V.required, V.equal(1)],
-      PaymentType: [V.required, V.equal("aio")],
-      MerchantTradeDate: [V.required, V.isMatch(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)],
-      TotalAmount: [V.required, V.isNumber, V.minValue(1), V.isInteger],
-      MerchantID: [V.required, V.isString, V.limitLength(1, 10)],
-      MerchantTradeNo: [
-        V.required, 
-        V.isString,
-        V.limitLength(1, 20),
-        V.isNumberOrEnglishLetter
-      ],
-      TradeDesc: [V.required, V.isString, V.limitLength(1, 200)],
-      ItemName: [V.required, V.isString, V.limitLength(1, 200)],
-      ReturnURL: [V.required, V.isString, V.isUrl, V.limitLength(1, 200)],
-      ChoosePayment: [
-        V.required,
-        V.includes<string>([
-          "Credit",
-          "WebATM",
-          "ATM",
-          "CVS",
-          "AccountLink",
-          "TopUpUsed",
-          "ALL"
-        ])
-      ]
-    });
+    check.verify(body, [V.isOrder]);
+    if (check.invalid) throw check.errorMessage;
+    body.CheckMacValue = getMacValue(body, this.config);
+    return {
+      params: body,
+      html: getPostFormHTML(this.config.AioCheckOutUrl, body)
+    };
+  }
+
+  public periodCheckout(must: ICheckOutMust, option: ICheckOutOption) {
+    let body: any = extend(
+      {
+        MerchantTradeNo: generateMerchantTradeNo(),
+        EncryptType: 1,
+        ChoosePayment: "ALL",
+        MerchantID: this.config.MerchantID,
+        MerchantTradeDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+        PaymentType: "aio"
+      },
+      option,
+      must
+    );
+    let check = new V();
+    check.verify(body, [V.isOrder, V.isPeriodOrder]);
     if (check.invalid) throw check.errorMessage;
     body.CheckMacValue = getMacValue(body, this.config);
     return {

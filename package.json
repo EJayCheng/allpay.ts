@@ -6,9 +6,8 @@
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "start": "ts-node ./test.ts",
     "test": "rm -rf dist && tsc && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
-    "prepublish": "rm -rf dist && tsc",
+    "prepublish": "tsc",
     "coverage": "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
   },
   "nyc": {

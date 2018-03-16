@@ -41,20 +41,22 @@ export class OPay {
     );
     let check = new V();
     check.verify(body, {
-      EncryptType: [V.equal(1)],
-      PaymentType: [V.equal("aio")],
-      MerchantTradeDate: [V.isMatch(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)],
-      TotalAmount: [V.isNumber, V.minValue(1), V.isInteger],
-      MerchantID: [V.isString, V.limitLength(1, 10)],
+      EncryptType: [V.required, V.equal(1)],
+      PaymentType: [V.required, V.equal("aio")],
+      MerchantTradeDate: [V.required, V.isMatch(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/)],
+      TotalAmount: [V.required, V.isNumber, V.minValue(1), V.isInteger],
+      MerchantID: [V.required, V.isString, V.limitLength(1, 10)],
       MerchantTradeNo: [
+        V.required, 
         V.isString,
         V.limitLength(1, 20),
         V.isNumberOrEnglishLetter
       ],
-      TradeDesc: [V.isString, V.limitLength(1, 200)],
-      ItemName: [V.isString, V.limitLength(1, 200)],
-      ReturnURL: [V.isString, V.isUrl, V.limitLength(1, 200)],
+      TradeDesc: [V.required, V.isString, V.limitLength(1, 200)],
+      ItemName: [V.required, V.isString, V.limitLength(1, 200)],
+      ReturnURL: [V.required, V.isString, V.isUrl, V.limitLength(1, 200)],
       ChoosePayment: [
+        V.required,
         V.includes<string>([
           "Credit",
           "WebATM",

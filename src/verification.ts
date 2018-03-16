@@ -39,16 +39,15 @@ export class Verification {
       }
       return false;
     } else if (method instanceof Array) {
-      for (let func of method) {
-        if (!this._verify(param, func, keyName)) return false;
-      }
-      return true;
+      return (param || method.map(func => func.name).includes('required')) ?
+      method.every(func => {
+        return this._verify(param, func, keyName);
+      }) : true;
     } else if (typeof method == "object") {
       let keys = Object.keys(method);
-      for (let key of keys) {
-        if (!this._verify(param[key], method[key], key)) return false;
-      }
-      return true;
+      return keys.every(key => {
+        return this._verify(param[key], method[key], key);
+      });
     }
     throw `Error Verification.verify: method is invalid. method: ${typeof method} = ${method}, param: ${typeof param} = ${param}`;
   }
@@ -59,6 +58,12 @@ export class Verification {
     this.errorInfo = null;
     this._valid = this._verify(param, method);
     return this._valid;
+  }
+  public static required(value: any): boolean {
+    let res = value;
+    res = (res instanceof Object && Object.keys(res).length > 0) || (res instanceof Array && res.length > 0) || res
+    if (!res) throw "value must be required.";
+    return res;
   }
   public static isNull(value: any): boolean {
     let res = value === null;

@@ -1,4 +1,4 @@
-import { OPayConfig, OPay, generateMerchantTradeNo } from "./";
+import { OPayConfig, OPay, generateMerchantTradeNo } from "./src";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 let app = express();

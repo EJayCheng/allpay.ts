@@ -1,4 +1,4 @@
-import { IOPayConfig } from "config";
+import { IOPayConfig } from "./config";
 import * as crypto from "crypto";
 import * as qs from "querystring";
 export function generateMerchantTradeNo() {

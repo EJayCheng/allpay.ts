@@ -1,17 +1,15 @@
 {
   "name": "opay-ts",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "oPay API. typescript version.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "dev": "nodemon -e ts -w ./ -x ts-node test.ts",
-    "test":
-      "rm -rf dist && tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
+    "test": "rm -rf dist && tsc && NODE_ENV=test && NODE_ENV=test && ./node_modules/.bin/mocha ./dist/test/*.spec.js",
     "prepublish": "tsc",
-    "coverage":
-      "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
+    "coverage": "rm -rf coverage && tsc && NODE_ENV=test && ./node_modules/.bin/nyc npm run test"
   },
   "nyc": {
     "include": ["dist/**/*.js"],

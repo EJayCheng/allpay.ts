@@ -18,16 +18,13 @@ export interface IOPayConfig {
   QueryTradeInfoUrl: string;
 }
 export class OPayConfig implements IOPayConfig {
-  private devEnv: string = "";
-  public QueryTradeInfoUrl: string;
-  public AioCheckOutUrl: string;
   /** oPay webhook ip 安全白名單 */
   public ipWhitelist: string[] = [
     "60.199.179.34",
     "60.199.179.36",
     "60.199.179.37",
     "60.199.179.38",
-    "60.199.179.53"
+    "60.199.179.53",
   ];
   public constructor(
     /** 會員編號 (由 O’Pay 提供), 預設使用測試環境(2000132) */
@@ -36,15 +33,21 @@ export class OPayConfig implements IOPayConfig {
     public AIOHashKey: string = "5294y06JbISpM5x9",
     /** ALL IN ONE 介接 HashIV, 預設使用測試環境(v77hoKGq4kWxNNIS) */
     public AIOHashIV: string = "v77hoKGq4kWxNNIS"
-  ) {
+  ) {}
+
+  private get domain(): string {
     //判斷是否為測試環境
-    if (["2012441", "2000132"].includes(this.MerchantID))
-      this.devEnv = "-stage";
-    this.AioCheckOutUrl = `https://payment${
-      this.devEnv
-    }.opay.tw/Cashier/AioCheckOut/V4`;
-    this.QueryTradeInfoUrl = `https://payment${
-      this.devEnv
-    }.opay.tw/Cashier/QueryTradeInfo/V4`;
+    if (["2012441", "2000132"].includes(this.MerchantID)) {
+      return "payment-stage.opay.tw";
+    }
+    return "payment.opay.tw";
+  }
+
+  public get AioCheckOutUrl(): string {
+    return `https://${this.domain}/Cashier/AioCheckOut/V5`;
+  }
+
+  public get QueryTradeInfoUrl(): string {
+    return `https://${this.domain}/Cashier/QueryTradeInfo/V5`;
   }
 }

@@ -5,6 +5,7 @@ export type TChoosePayment =
   | "CVS"
   | "AccountLink"
   | "TopUpUsed"
+  | "WeiXinpay"
   | "ALL";
 export type TIgnorePayment =
   | "Credit"
@@ -28,6 +29,8 @@ export type TChooseSubPayment =
   | "AccountLink"
   | "Credit"
   | "AllPay";
+
+export type YesOrNo = "N" | "Y";
 export interface ICheckOutMust {
   /**
    * 會員編號 (由 O’Pay 提供)
@@ -40,12 +43,13 @@ export interface ICheckOutMust {
    * - 英數字大小寫混合
    * - 如何避免訂單編號重複請參考 [FAQ](https://forum.opay.tw/forum.php?mod=viewthread&tid=127&extra=page%3D1)
    * - 如有使用 PlatformID，平台商底下所有商家之訂單編號亦不可重複
-   * - 最大字數 20
+   * - 當[ChoosePayment]為 WeiXinpay(微信支付)時，MerchantTradeNo 僅支援 32 位元。若超過此限制，則無法顯示微信付款 QRCode 資訊。
+   * - 最大字數 64 or 32
    */
   MerchantTradeNo?: string;
   /**
    * 會員交易時間
-   * - 格式為: yyyy/MM/dd HH:mm:ss
+   * - 格式為: YYYY/MM/dd HH:mm:ss
    * - 最大字數 20
    */
   MerchantTradeDate?: string;
@@ -71,6 +75,9 @@ export interface ICheckOutMust {
   /**
    * 商品名稱
    * - 最大字數 200
+   * - 如果商品名稱有多筆，需在金流選擇頁一行一行顯示商品名稱的話，商品名稱請以符號#分隔
+   * - 若付款方式選擇[微信支付]，必須依照範例格式帶入【商品名稱 1 單價 X 數量#商品名稱 2 單價 X 數量】，且字數限制為 40 個英數字或中文字。
+   * - 為避免建立訂單失敗，字數超出長度限制系統將會自動截斷。
    */
   ItemName: string;
   /**
@@ -91,8 +98,12 @@ export interface ICheckOutMust {
    * - CVS: 超商代碼
    * - AccountLink: 銀行快付
    * - TopUpUsed: 儲值消費
+   * - WeiXinpay: 微信支付
    * - ALL: 不指定付款方式，由 oPay 顯示付款方式選擇頁面
    * - 最大字數 20
+   * - 若為手機版時不支援下列付款方式: WebATM
+   * - 微信支付目前無法提供交易測試的回應，預計未來會再提供。
+   * - 微信支付繳費期限為 2 小時，請務必於期限內進行付款。
    */
   ChoosePayment?: TChoosePayment;
   /** 檢查碼 */
@@ -204,7 +215,7 @@ export interface ICheckOutOption {
    *
    * 為 Y 時，付款完成後 oPay 會以 POST 方式回傳額外的付款資訊
    */
-  NeedExtraPaidInfo?: "N" | "Y";
+  NeedExtraPaidInfo?: YesOrNo;
   /**
    * 特約合作平台商代號(由 oPay 提供)
    * - 為專案合作的平台商使用，一般會員或平台商本身介接，則參數請帶放空值
@@ -238,7 +249,7 @@ export interface ICheckOutOption {
    * - 配合折抵購物金/紅包會員， oPay 將協助進行免費曝光，折抵之金額，則由會員負擔
    * - 若可使用購物金/紅包折抵時，需注意接收付款結果通知時，請以交易金額 [TradeAmt] 做訂單金額的檢查。
    */
-  UseRedeem?: "N" | "Y";
+  UseRedeem?: YesOrNo;
   /**
    * 超商繳費截止時間
    * - CVS:若參數值 > 100 時，以 分鐘 為單位
@@ -281,7 +292,7 @@ export interface ICheckOutOption {
    * - 若為使用時，請帶 Y
    * - 若為不使用時，請帶 N
    */
-  Redeem?: "N" | "Y";
+  Redeem?: YesOrNo;
   /**
    * 刷卡分期期數
    * - 提供刷卡分期期數信用卡分期可用參數為 3,6,12,18,24

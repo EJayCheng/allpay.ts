@@ -1,18 +1,6 @@
-import * as mocha from "mocha";
-import * as assert from "assert";
-import * as should from "should";
+import { urlEncodeDotNet } from "../";
 require("should");
-import { generateMerchantTradeNo, urlEncodeDotNet } from "../";
 describe("util.ts", () => {
-  describe("generateMerchantTradeNo", () => {
-    it("success", () => {
-      generateMerchantTradeNo().should.is.String();
-      generateMerchantTradeNo().length.should.equal(20);
-      generateMerchantTradeNo()
-        .substr(0, 2)
-        .should.equal("TN");
-    });
-  });
   describe("urlEncodeDotNet", () => {
     it("success", () => {
       urlEncodeDotNet("abc123ABC-_<>?/|{}[]()!@#$%^&*~`\"'=+").should.equal(
@@ -20,22 +8,22 @@ describe("util.ts", () => {
       );
     });
     it("input is not string", () => {
-      (function() {
+      (function () {
         urlEncodeDotNet(0 as any);
       }.should.throw());
-      (function() {
+      (function () {
         urlEncodeDotNet({} as any);
       }.should.throw());
-      (function() {
+      (function () {
         urlEncodeDotNet(true as any);
       }.should.throw());
-      (function() {
+      (function () {
         urlEncodeDotNet(null as any);
       }.should.throw());
-      (function() {
+      (function () {
         urlEncodeDotNet((() => {}) as any);
       }.should.throw());
-      (function() {
+      (function () {
         urlEncodeDotNet(new String("abc") as any);
       }.should.throw());
     });

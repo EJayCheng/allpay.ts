@@ -1,28 +1,6 @@
-import * as crypto from "crypto";
+import { createCipheriv, createHash } from "crypto";
 import { IOPayConfig } from "./config";
-export function generateMerchantTradeNo() {
-  return `TN${Date.now()}R${randString(4)}`.slice(0, 20);
-}
-export function randString(
-  length: number,
-  option: {
-    notAllowNumber?: boolean;
-    notAllowEnglish?: boolean;
-    notAllowLowercaseEnglish?: boolean;
-    notAllowUppercaseEnglish?: boolean;
-  } = {}
-) {
-  let possible = "";
-  if (!option.notAllowNumber) possible += "0123456789";
-  if (!option.notAllowEnglish && !option.notAllowUppercaseEnglish)
-    possible += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  if (!option.notAllowEnglish && !option.notAllowLowercaseEnglish)
-    possible += "abcdefghijklmnopqrstuvwxyz";
-  let text = "";
-  for (var i = 0; i < 5; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  return text;
-}
+
 export function getMacValue(params: any, config: IOPayConfig) {
   if (typeof params != "object") throw "Error getMacValue: params is invalid.";
   let invalidKeys = ["CheckMacValue", "HashKey", "HashIV"];
@@ -42,17 +20,17 @@ export function getMacValue(params: any, config: IOPayConfig) {
   let res = "";
   switch (params.EncryptType) {
     case 0:
-      res = crypto.createHash("md5").update(raw).digest("hex");
+      res = createHash("md5").update(raw).digest("hex");
       break;
     default:
     case 1:
-      res = crypto.createHash("sha256").update(raw).digest("hex");
+      res = createHash("sha256").update(raw).digest("hex");
       break;
   }
   return res.toUpperCase();
 }
 
-export function urlEncodeDotNet(str: string) {
+export function urlEncodeDotNet(str: string): string {
   if (typeof str != "string") throw `Error urlEncodeDotNet: str is invalid.`;
   return encodeURIComponent(str)
     .toLowerCase()
@@ -61,14 +39,14 @@ export function urlEncodeDotNet(str: string) {
     .replace(/\%20/g, "+");
 }
 
-export function toPostFormHTML(url: string, params: any) {
+export function toPostFormHtml(url: string, params: any) {
   let inputs = Object.keys(params)
     .map(
       (key) =>
-        `  <input type="hidden" name="${key}" id="opay_input_${key}" value="${params[key]}" />`
+        `  <input type="hidden" name="${key}" id="opay-input-${key}" value="${params[key]}" />`
     )
     .join("\n");
-  let id = `opay_form_${params.MerchantTradeNo}`;
+  let id = `opay-form-${params.MerchantTradeNo}`;
   return `
 <form id="${id}" action="${url}" method="post">
 ${inputs}
@@ -81,13 +59,7 @@ export function verifyMacValue(body: any, config: IOPayConfig) {
   let mac: string = body.CheckMacValue;
   if (!mac) throw "Error verifyMacValue: CheckMacValue is empty.";
   delete body.CheckMacValue;
-  let val = "";
-  if (mac.length === 64) {
-    val = getMacValue(body, config);
-  } else if (mac.length === 32) {
-    val = getMacValue(body, config);
-  }
-  return mac === val;
+  return [64, 32].includes(mac.length) && getMacValue(body, config) === mac;
 }
 
 export function encryptAES(params: any, config: IOPayConfig) {
@@ -97,7 +69,7 @@ export function encryptAES(params: any, config: IOPayConfig) {
   sec.forEach((key) => {
     delete params[key];
   });
-  let encipher = crypto.createCipheriv(
+  let encipher = createCipheriv(
     "aes-128-cbc",
     config.AIOHashKey,
     config.AIOHashIV

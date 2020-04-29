@@ -46,7 +46,7 @@ export interface ICheckOutMust {
    * - 當[ChoosePayment]為 WeiXinpay(微信支付)時，MerchantTradeNo 僅支援 32 位元。若超過此限制，則無法顯示微信付款 QRCode 資訊。
    * - 最大字數 64 or 32
    */
-  MerchantTradeNo?: string;
+  MerchantTradeNo: string;
   /**
    * 會員交易時間
    * - 格式為: YYYY/MM/dd HH:mm:ss

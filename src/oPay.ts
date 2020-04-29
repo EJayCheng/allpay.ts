@@ -8,12 +8,7 @@ import { ICheckOutMust, ICheckOutOption } from "./ICheckOut";
 import { IPaymentInfo } from "./IPaymentInfo";
 import { IReturnPost } from "./IReturnPost";
 import { ITradeInfo } from "./ITradeInfo";
-import {
-  generateMerchantTradeNo,
-  getMacValue,
-  toPostFormHTML,
-  verifyMacValue,
-} from "./util";
+import { getMacValue, toPostFormHtml, verifyMacValue } from "./util";
 export class OPay {
   public constructor(private config: IOPayConfig) {}
 
@@ -33,7 +28,6 @@ export class OPay {
   ): { params: ICheckOutMust & ICheckOutOption; html: string } {
     let body: ICheckOutMust & ICheckOutOption = extend(
       {
-        MerchantTradeNo: generateMerchantTradeNo(),
         EncryptType: 1,
         ChoosePayment: "ALL",
         MerchantID: this.config.MerchantID,
@@ -46,7 +40,7 @@ export class OPay {
     body.CheckMacValue = getMacValue(body, this.config);
     return {
       params: body,
-      html: toPostFormHTML(this.config.AioCheckOutUrl, body),
+      html: toPostFormHtml(this.config.AioCheckOutUrl, body),
     };
   }
 
